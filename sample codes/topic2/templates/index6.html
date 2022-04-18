@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<ul>
+   {% for name,fruit in person.items() %}
+	   <li>{{name}} love to eat {{fruit}}</li>
+   {% endfor %}
+</ul>
+{% endblock %}
