@@ -5,7 +5,7 @@ from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///studentss.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # change this IRL
 
@@ -42,6 +42,15 @@ def db_seed():
     db.session.add(student1)
     db.session.add(student2)
     db.session.add(student3)
+    db.session.commit()
+    print('Database seeded!')
+
+    test_user = User(first_name='William',
+                     last_name='Herschel',
+                     email='test@test.com',
+                     password='P@ssw0rd')
+
+    db.session.add(test_user)
     db.session.commit()
     print('Database seeded!')
 
@@ -103,9 +112,9 @@ def add_student():
     else:
         city = request.form['city']
         addr = request.form['addr']
-        pin = int(request.form['int'])
+        pin = int(request.form['pin'])
 
-        new_studnet = Student(name=name,
+        new_student = Student(name=name,
                             city=city,
                             addr=addr,
                             pin=pin)
@@ -157,7 +166,7 @@ class Student(db.Model):
     name = Column(String(100))
     city = Column(String(50))
     addr = Column(String(200)) 
-    pin = Column(String(10))
+    pin = Column(Integer)
     
 class UserSchema(ma.Schema):
     class Meta:
@@ -174,4 +183,4 @@ student_schema = StudentSchema()
 students_schema = StudentSchema(many=True)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
